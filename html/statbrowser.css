@@ -19,6 +19,15 @@ body.dark {
 	scrollbar-shadow-color: #3b3b3b;
 }
 
+body.webclient {
+	background-color: rgba(255,255,255,0.3);
+}
+body.webclient.dark {
+	background-color: rgba(0,0,0,0.3);
+}
+
+
+
 #menu {
 	background-color: #F0F0F0;
 	position: fixed;
@@ -32,6 +41,8 @@ body.dark {
 
 #statcontent {
 	padding: 7px 7px 7px 7px;
+	width: fit-content;
+	margin-left: auto;
 }
 
 a {

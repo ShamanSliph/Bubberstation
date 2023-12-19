@@ -14,6 +14,12 @@ if (!String.prototype.trim) {
 	};
 }
 
+var class_suffix = "";
+if("byond" in window) {
+	class_suffix += " webclient";
+	document.body.className = class_suffix.trim();
+}
+
 // Status panel implementation ------------------------------------------------
 var status_tab_parts = ["Loading..."];
 var current_tab = null;
@@ -75,6 +81,7 @@ function createStatusTab(name) {
 	menu.appendChild(B);
 	SendTabToByond(name);
 	under_menu.style.height = menu.clientHeight + 'px';
+	updateClip();
 }
 
 function removeStatusTab(name) {
@@ -89,6 +96,7 @@ function removeStatusTab(name) {
 	menu.removeChild(document.getElementById(name));
 	TakeTabFromByond(name);
 	under_menu.style.height = menu.clientHeight + 'px';
+	updateClip();
 }
 
 function sortVerbs() {
@@ -347,6 +355,7 @@ function draw_debug() {
 		table3.appendChild(trrr);
 	}
 	document.getElementById("statcontent").appendChild(table3);
+	updateClip();
 
 }
 function draw_status() {
@@ -367,6 +376,7 @@ function draw_status() {
 	if (verb_tabs.length == 0 || !verbs) {
 		Byond.command("Fix-Stat-Panel");
 	}
+	updateClip();
 }
 
 function draw_mc() {
@@ -391,6 +401,7 @@ function draw_mc() {
 		table.appendChild(tr);
 	}
 	document.getElementById("statcontent").appendChild(table);
+	updateClip();
 }
 
 function remove_tickets() {
@@ -436,6 +447,7 @@ function iconError(e) {
 		node.setAttribute("data-attempts", current_attempts + 1)
 		draw_listedturf();
 	}, imageRetryDelay);
+	updateClip();
 }
 
 function draw_listedturf() {
@@ -493,6 +505,7 @@ function draw_listedturf() {
 		table.appendChild(document.createElement("br"));
 	}
 	document.getElementById("statcontent").appendChild(table);
+	updateClip();
 }
 
 function remove_listedturf() {
@@ -532,6 +545,7 @@ function draw_sdql2() {
 		table.appendChild(tr);
 	}
 	document.getElementById("statcontent").appendChild(table);
+	updateClip();
 }
 
 function draw_tickets() {
@@ -564,6 +578,7 @@ function draw_tickets() {
 		table.appendChild(tr);
 	}
 	document.getElementById("statcontent").appendChild(table);
+	updateClip();
 }
 
 function draw_interviews() {
@@ -614,6 +629,7 @@ function draw_interviews() {
 		table.appendChild(tr);
 	}
 	document.getElementById("statcontent").appendChild(table);
+	updateClip();
 }
 
 function draw_spells(cat) {
@@ -639,6 +655,7 @@ function draw_spells(cat) {
 		table.appendChild(tr);
 	}
 	document.getElementById("statcontent").appendChild(table);
+	updateClip();
 }
 
 function make_verb_onclick(command) {
@@ -689,6 +706,7 @@ function draw_verbs(cat) {
 			a.appendChild(t);
 			(subCat ? additions[subCat] : table).appendChild(a);
 		}
+		updateClip();
 	}
 
 	// Append base table to view
@@ -705,16 +723,18 @@ function draw_verbs(cat) {
 			content.appendChild(additions[cat]);
 		}
 	}
+	updateClip();
 }
 
 function set_theme(which) {
 	if (which == "light") {
-		document.body.className = "";
+		document.body.className = class_suffix.trim();
 		set_style_sheet("browserOutput_white");
 	} else if (which == "dark") {
-		document.body.className = "dark";
+		document.body.className = "dark" + class_suffix;
 		set_style_sheet("browserOutput");
 	}
+	updateClip();
 }
 
 function set_style_sheet(sheet) {
@@ -730,6 +750,7 @@ function set_style_sheet(sheet) {
 	sheetElement.href = sheet + ".css";
 	sheetElement.media = 'all';
 	head.appendChild(sheetElement);
+	updateClip();
 }
 
 function restoreFocus() {
@@ -781,6 +802,7 @@ function add_verb_list(payload) {
 			createStatusTab(category);
 		}
 	}
+	updateClip();
 };
 
 function init_spells() {
@@ -993,6 +1015,40 @@ Byond.subscribeTo('update_tickets', function (T) {
 		draw_tickets();
 	}
 });
+
+var clip_raf = null;
+var last_clip = "";
+function updateClip() {
+	if(!("byond" in window)) return;
+	if(clip_raf != null) return;
+	clip_raf = requestAnimationFrame(function() {
+		clip_raf = null;
+		var str = "path(\"";
+		var items = [statcontentdiv, menu];
+		for(var i = 0; i < items.length; i++) {
+			var item = items[i];
+			var rect = item.getBoundingClientRect();
+			var x = rect.x;
+			var y = rect.y;
+			var width = rect.width;
+			var height = rect.height;
+			if(document.documentElement.scrollWidth > document.documentElement.clientWidth) {
+				y = 0;
+				height = window.innerHeight;
+			}
+			if(document.documentElement.scrollHeight > document.documentElement.clientHeight) {
+				x = 0;
+				width = window.innerWidth;
+			}
+			str += "M" + x + " " + y + "h" + width + "v" + height + "h" + (-width) + "z";
+		}
+		str += "\")";
+		if(str != last_clip) {
+			last_clip = str;
+			byond.go("byond://winset?id=statbrowser;clip-path=" + str);
+		}
+	});
+}
 
 Byond.subscribeTo('remove_listedturf', remove_listedturf);
 

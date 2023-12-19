@@ -33,52 +33,57 @@ export const Panel = (props, context) => {
     <Pane theme={settings.theme}>
       <Stack fill vertical>
         <Stack.Item>
-          <Section fitted>
+          <Section fitted className="clip-include">
             <Stack mr={1} align="center">
-              <Stack.Item grow overflowX="auto">
+              <Stack.Item grow={game.pointerLockState ? 0 : 1} overflowX="auto">
                 <ChatTabs />
               </Stack.Item>
               <Stack.Item>
                 <PingIndicator />
               </Stack.Item>
-              <Stack.Item>
-                <Button
-                  color="grey"
-                  selected={audio.visible}
-                  icon="music"
-                  tooltip="Music player"
-                  tooltipPosition="bottom-start"
-                  onClick={() => audio.toggle()}
-                />
-              </Stack.Item>
-              <Stack.Item>
-                <Button
-                  icon={settings.visible ? 'times' : 'cog'}
-                  selected={settings.visible}
-                  tooltip={
-                    settings.visible ? 'Close settings' : 'Open settings'
-                  }
-                  tooltipPosition="bottom-start"
-                  onClick={() => settings.toggle()}
-                />
-              </Stack.Item>
+              {!game.pointerLockState && (
+                <>
+                  <Stack.Item>
+                    <Button
+                      color="grey"
+                      selected={audio.visible}
+                      icon="music"
+                      tooltip="Music player"
+                      tooltipPosition="bottom-start"
+                      onClick={() => audio.toggle()}
+                    />
+                  </Stack.Item>
+                  <Stack.Item>
+                    <Button
+                      icon={settings.visible ? 'times' : 'cog'}
+                      selected={settings.visible}
+                      tooltip={
+                        settings.visible ? 'Close settings' : 'Open settings'
+                      }
+                      tooltipPosition="bottom-start"
+                      onClick={() => settings.toggle()}
+                    />
+                  </Stack.Item>
+                </>
+              )}
             </Stack>
           </Section>
         </Stack.Item>
         {audio.visible && (
           <Stack.Item>
-            <Section>
+            <Section className="clip-include">
               <NowPlayingWidget />
             </Section>
           </Stack.Item>
         )}
+        {!('byond' in window) && tabs_thingy}
         {settings.visible && (
           <Stack.Item>
             <SettingsPanel />
           </Stack.Item>
         )}
         <Stack.Item grow>
-          <Section fill fitted position="relative">
+          <Section fill fitted position="relative" className="clip-include">
             <Pane.Content scrollable>
               <ChatPanel lineHeight={settings.lineHeight} />
             </Pane.Content>
@@ -98,6 +103,7 @@ export const Panel = (props, context) => {
             </Notifications>
           </Section>
         </Stack.Item>
+        {'byond' in window && tabs_thingy}
       </Stack>
     </Pane>
   );

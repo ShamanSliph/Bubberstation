@@ -32,37 +32,44 @@ export const ChatTabs = (props, context) => {
     <Flex align="center">
       <Flex.Item>
         <Tabs textAlign="center">
-          {pages.map((page) => (
-            <Tabs.Tab
-              key={page.id}
-              selected={page === currentPage}
-              rightSlot={
-                page.unreadCount > 0 && (
-                  <UnreadCountWidget value={page.unreadCount} />
-                )
-              }
-              onClick={() =>
-                dispatch(
-                  changeChatPage({
-                    pageId: page.id,
-                  })
-                )
-              }>
-              {page.name}
-            </Tabs.Tab>
-          ))}
+          {pages.map(
+            (page) =>
+              (!game.pointerLockState ||
+                page === currentPage ||
+                page.unreadCount > 0) && (
+                <Tabs.Tab
+                  key={page.id}
+                  selected={page === currentPage}
+                  rightSlot={
+                    page.unreadCount > 0 && (
+                      <UnreadCountWidget value={page.unreadCount} />
+                    )
+                  }
+                  onClick={() =>
+                    dispatch(
+                      changeChatPage({
+                        pageId: page.id,
+                      })
+                    )
+                  }>
+                  {page.name}
+                </Tabs.Tab>
+              )
+          )}
         </Tabs>
       </Flex.Item>
-      <Flex.Item ml={1}>
-        <Button
-          color="transparent"
-          icon="plus"
-          onClick={() => {
-            dispatch(addChatPage());
-            dispatch(openChatSettings());
-          }}
-        />
-      </Flex.Item>
+      {!game.pointerLockState && (
+        <Flex.Item ml={1}>
+          <Button
+            color="transparent"
+            icon="plus"
+            onClick={() => {
+              dispatch(addChatPage());
+              dispatch(openChatSettings());
+            }}
+          />
+        </Flex.Item>
+      )}
     </Flex>
   );
 };
