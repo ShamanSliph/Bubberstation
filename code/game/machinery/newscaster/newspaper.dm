@@ -82,7 +82,7 @@
 						i++
 						dat+="-[MESSAGE.return_body(notContent(MESSAGE.body_censor_time))] <BR>"
 						if(MESSAGE.img)
-							user << browse_rsc(MESSAGE.img, "tmp_photo[i].png")
+							browse_rsc_web(MESSAGE.img, "tmp_photo[i].png")
 							dat+="<img src='tmp_photo[i].png' width = '180'><BR>"
 						dat+="<FONT SIZE=1>\[Story by <FONT COLOR='maroon'>[MESSAGE.return_author(notContent(MESSAGE.author_censor_time))]</FONT>\]</FONT><BR><BR>"
 					dat+="</ul>"
@@ -98,7 +98,7 @@
 				dat+="<B>Description</B>: [wantedBody]<BR>"
 				dat+="<B>Photo:</B>: "
 				if(wantedPhoto)
-					user << browse_rsc(wantedPhoto, "tmp_photow.png")
+					browse_rsc_web(wantedPhoto, "tmp_photow.png")
 					dat+="<BR><img src='tmp_photow.png' width = '180'>"
 				else
 					dat+="None"

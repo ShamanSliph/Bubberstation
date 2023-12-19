@@ -116,7 +116,11 @@
       cef_to_byond('byond://' + url);
       return;
     }
-
+    // Webclient
+    if(window.byond) {
+      window.byond.go('byond://' + url);
+      return;
+    }
     // Perform a standard call via location.href
     if (url.length < 2048) {
       location.href = 'byond://' + url;
@@ -658,6 +662,6 @@ Thank you for your cooperation.
 // Signal tgui that we're ready to receive updates
 Byond.sendMessage('ready');
 </script>
-  
+
 </body>
 </html>

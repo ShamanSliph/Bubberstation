@@ -349,7 +349,7 @@
 		var/datum/callback/callback = settings["preview_callback"]
 		preview_icon = callback.Invoke(settings)
 		if (preview_icon)
-			user << browse_rsc(preview_icon, "previewicon.png")
+			browse_rsc_web(preview_icon, "previewicon.png")
 	var/dat = ""
 
 	for (var/name in settings["mainsettings"])

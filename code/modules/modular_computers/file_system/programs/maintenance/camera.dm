@@ -41,7 +41,7 @@
 	var/list/data = list()
 
 	if(!isnull(internal_picture))
-		user << browse_rsc(internal_picture.picture_image, "tmp_photo[picture_number].png")
+		browse_rsc_web(internal_picture.picture_image, "tmp_photo[picture_number].png")
 		data["photo"] = "tmp_photo[picture_number].png"
 
 	data["paper_left"] = computer.stored_paper
