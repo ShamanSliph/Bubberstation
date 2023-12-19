@@ -240,3 +240,15 @@
 		// Shuttle status, see /__DEFINES/stat.dm
 		.["shuttle_timer"] = SSshuttle.emergency.timeLeft()
 		// Shuttle timer, in seconds
+
+/datum/world_topic/webclient_login
+	keyword = "webclient_login_token"
+	require_comms_key = TRUE
+
+/datum/world_topic/webclient_login/Run(list/input)
+	var/token = input["webclient_login_token"]
+	var/info = input["webclient_login_info"]
+	if(fexists(WEBCLIENT_PATCHES))
+		var/result = call(WEBCLIENT_PATCHES, "set_webclient_auth")(token, info)
+		if(result)
+			log_world("webclient_patches error: [result]")

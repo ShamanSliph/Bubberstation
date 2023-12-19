@@ -8,6 +8,8 @@
 #define USE_CUSTOM_ERROR_HANDLER
 #endif
 
+#define WEBCLIENT_PATCHES (world.system_type == MS_WINDOWS ? "webclient_patches.dll" : "libwebclient_patches.so")
+
 #ifdef TESTING
 #define DATUMVAR_DEBUGGING_MODE
 
@@ -96,6 +98,8 @@
 #warn Hey brother, you're running in LAG MODE.
 #warn IF YOU PUT THIS ON LIVE I WILL FIND YOU AND MAKE YOU WISH YOU WERE NEVE-
 #endif
+
+
 
 #ifndef PRELOAD_RSC //set to:
 #define PRELOAD_RSC 1 // 0 to allow using external resources or on-demand behaviour;

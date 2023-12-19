@@ -79,7 +79,7 @@
 	var/list/wanted_info = list()
 	if(GLOB.news_network.wanted_issue)
 		if(GLOB.news_network.wanted_issue.img)
-			user << browse_rsc(GLOB.news_network.wanted_issue.img, "wanted_photo.png")
+			browse_rsc_web(GLOB.news_network.wanted_issue.img, "wanted_photo.png")
 		wanted_info = list(list(
 			"active" = GLOB.news_network.wanted_issue.active,
 			"criminal" = GLOB.news_network.wanted_issue.criminal,
@@ -103,7 +103,7 @@
 			var/photo_ID = null
 			var/list/comment_list
 			if(feed_message.img)
-				user << browse_rsc(feed_message.img, "tmp_photo[feed_message.message_ID].png")
+				browse_rsc_web(feed_message.img, "tmp_photo[feed_message.message_ID].png")
 				photo_ID = "tmp_photo[feed_message.message_ID].png"
 			for(var/datum/feed_comment/comment_message as anything in feed_message.comments)
 				comment_list += list(list(
