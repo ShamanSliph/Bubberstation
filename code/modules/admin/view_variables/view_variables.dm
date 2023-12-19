@@ -38,7 +38,7 @@
 	var/sprite_text
 	if(sprite)
 		hash = md5(sprite)
-		src << browse_rsc(sprite, "vv[hash].png")
+		browse_rsc_web(src, sprite, "vv[hash].png")
 		sprite_text = no_icon ? "\[NO ICON\]" : "<img src='vv[hash].png'></td><td>"
 
 	title = "[thing] ([REF(thing)]) = [type]"

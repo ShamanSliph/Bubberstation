@@ -345,6 +345,8 @@ GLOBAL_VAR(restart_counter)
 
 /world/Del()
 	auxcleanup()
+	if(fexists(WEBCLIENT_PATCHES))
+		call(WEBCLIENT_PATCHES, "remove_webclient_patches")()
 	. = ..()
 
 /* SKYRAT EDIT REMOVAL - OVERRIDEN
