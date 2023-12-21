@@ -53,9 +53,10 @@
   })();
 
   // Basic checks to detect whether this page runs in BYOND
-  var isByond = (Byond.TRIDENT !== null || window.cef_to_byond)
+  var isByond = ("byond" in window) ||
+    ((Byond.TRIDENT !== null || window.cef_to_byond)
     && location.hostname === '127.0.0.1'
-    && location.search !== '?external';
+    && location.search !== '?external');
     //As of BYOND 515 the path doesn't seem to include tmp dir anymore if you're trying to open tgui in external browser and looking why it doesn't work
     //&& location.pathname.indexOf('/tmp') === 0
 
@@ -116,7 +117,7 @@
       cef_to_byond('byond://' + url);
       return;
     }
-    // Webclient
+    //webclient
     if(window.byond) {
       window.byond.go('byond://' + url);
       return;

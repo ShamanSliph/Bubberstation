@@ -32,6 +32,7 @@ export const setClientTheme = (name) => {
   }, 1500);
 
   if (name === 'light') {
+    if(!("byond" in window)) document.body.style.background = "white";
     return Byond.winset({
       // Main windows
       'infowindow.background-color': 'none',
@@ -84,6 +85,7 @@ export const setClientTheme = (name) => {
     });
   }
   if (name === 'dark') {
+    if(!("byond" in window)) document.body.style.background = "#333333";
     Byond.winset({
       // Main windows
       'infowindow.background-color': COLOR_DARK_BG,
