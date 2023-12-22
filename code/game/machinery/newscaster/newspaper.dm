@@ -98,7 +98,7 @@
 				dat+="<B>Description</B>: [wantedBody]<BR>"
 				dat+="<B>Photo:</B>: "
 				if(wantedPhoto)
-					browse_rsc_web
+					browse_rsc_web(user, wantedPhoto, "tmp_photow.png")
 					dat+="<BR><img src='tmp_photow.png' width = '180'>"
 				else
 					dat+="None"

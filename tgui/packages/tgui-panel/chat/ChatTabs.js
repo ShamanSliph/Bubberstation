@@ -9,6 +9,7 @@ import { Box, Tabs, Flex, Button } from 'tgui/components';
 import { changeChatPage, addChatPage } from './actions';
 import { selectChatPages, selectCurrentChatPage } from './selectors';
 import { openChatSettings } from '../settings/actions';
+import { useGame } from '../game';
 
 const UnreadCountWidget = ({ value }) => (
   <Box
@@ -28,6 +29,7 @@ export const ChatTabs = (props, context) => {
   const pages = useSelector(context, selectChatPages);
   const currentPage = useSelector(context, selectCurrentChatPage);
   const dispatch = useDispatch(context);
+  const game = useGame(context);
   return (
     <Flex align="center">
       <Flex.Item>

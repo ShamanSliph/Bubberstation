@@ -76,7 +76,7 @@ export const Panel = (props, context) => {
             </Section>
           </Stack.Item>
         )}
-        {!('byond' in window) && tabs_thingy}
+        {!('byond' in window)}
         {settings.visible && (
           <Stack.Item>
             <SettingsPanel />
@@ -103,7 +103,7 @@ export const Panel = (props, context) => {
             </Notifications>
           </Section>
         </Stack.Item>
-        {'byond' in window && tabs_thingy}
+        {'byond' in window}
       </Stack>
     </Pane>
   );
