@@ -90,7 +90,7 @@ export class Atom implements AtomDependent {
 						if((this.glide_vec[i] = Math.max(0, (Math.abs(gv) - moveDist)) * Math.sign(gv))) {
 							nz = true;
 						}
-					}	
+					}
 					if(!nz) this.glide_vec = null;
 				} else {
 					let actDist = vec2.length(this.glide_vec);
@@ -121,7 +121,7 @@ export class Atom implements AtomDependent {
 				x += this.glide_vec[0];
 				y += this.glide_vec[1];
 			}
-			
+
 			this.last_draw_pos = [x+0.5,y+0.5,0.5];
 
 			let appearance_obj : Atom = this;
@@ -133,14 +133,14 @@ export class Atom implements AtomDependent {
 			let appearance = appearance_obj.appearance;
 			if(appearance && (this.pixel_w || this.pixel_x || this.pixel_y || this.pixel_z)) appearance = appearance.copy(appearance_obj);
 			if(appearance_obj.animation && appearance) appearance = appearance_obj.animation.apply(appearance, this.client.time);
-			
+
 
 			let list = this.render_plan;
 			if(this.vis_contents) for(let thing_id of this.vis_contents) {
 				let thing = this.client.get_atom(thing_id);
 				let thing_appearance = thing.appearance;
 				if(!thing_appearance) continue;
-				if(thing_appearance.plane == 16) {
+				if(thing_appearance.plane == 11) {
 					thing.add_dependent(this);
 					list.push(new LightingRenderPlan(
 						x+0.5, y+0.5, (-(thing_appearance.transform?.[2] ?? 0) + 16) / 32, thing_appearance.color_alpha
@@ -150,7 +150,7 @@ export class Atom implements AtomDependent {
 			if(appearance && appearance.invisibility <= this.client.eye_see_invisible) {
 				let tag = appearance.e3d_tag;
 				if(this.type == 1 && !tag?.length) {
-					tag = appearance.plane == -1 ? E3D_TYPE_SMOOTHWALL : E3D_TYPE_FLOOR;
+					tag = appearance.plane == -9 ? E3D_TYPE_SMOOTHWALL : E3D_TYPE_FLOOR;
 				}
 				let func = e3d_type_handlers.get(tag);
 				if(!func) func = e3d_type_handlers.get(E3D_TYPE_BILLBOARD)!;
@@ -164,7 +164,7 @@ export class Atom implements AtomDependent {
 			}
 			if(this.images) for(let image of this.images) {
 				let image_appearance = image.appearance;
-				if(!image_appearance || image_appearance.plane == 19) continue;
+				if(!image_appearance || image_appearance.plane == 21) continue;
 
 				let func = e3d_type_handlers.get(image_appearance.e3d_tag) ?? e3d_type_handlers.get(E3D_TYPE_BILLBOARD)!;
 				func.call(this, list, image_appearance, x, y);
@@ -257,7 +257,7 @@ let e3d_type_handlers = new Map<string, (this: Atom, list : RenderPlan[], appear
 		list.push(plan = new BillboardRenderPlan(this.full_id, appearance, x+0.5, y+0.5).set_offsets(appearance.pixel_w/32, appearance.pixel_z/32).set_alpha_sort(focus));
 		if(appearance.plane >= 13) plan.bits |= 1;
 		if(appearance.overlays) for(let overlay of appearance.overlays) {
-			if(overlay.plane == 12) continue;
+			if(overlay.plane == 14) continue;
 			let bias = -0.05;
 			if(overlay.layer < 0) bias = -(51 + overlay.layer) / 1000;
 			overlay = overlay.copy_inherit(appearance, undefined, true);
@@ -274,7 +274,7 @@ let e3d_type_handlers = new Map<string, (this: Atom, list : RenderPlan[], appear
 					thing_appearance = thing.animation.apply(thing_appearance, this.client.time);
 					this.render_plan = null;
 				}
-				if(thing_appearance.plane == 12 || thing_appearance.plane == 16) continue;
+				if(thing_appearance.plane == 14 || thing_appearance.plane == 11 || appearance.plane == 17) continue;
 				let plan;
 				let bias = -0.051;
 				thing_appearance = thing_appearance.copy_inherit(appearance, thing, true);
@@ -319,7 +319,7 @@ let e3d_type_handlers = new Map<string, (this: Atom, list : RenderPlan[], appear
 		}
 		if(vis_contents) for(let vc of vis_contents) {
 			let appearance = this.client.get_atom(vc).appearance;
-			if(!appearance || appearance.plane == 16) continue;
+			if(!appearance || appearance.plane == 11 || appearance.plane == 17) continue;
 			if(appearance.e3d_tag == E3D_TYPE_GAS_OVERLAY) {
 				list.push(new BoxRenderPlan(this.full_id, appearance, x, y).set_alpha_sort([x+0.5,y+0.5,0.5], -0.2))
 			}
@@ -330,7 +330,7 @@ let e3d_type_handlers = new Map<string, (this: Atom, list : RenderPlan[], appear
 		let pixel_y = appearance.pixel_y;
 		list.push(new WallmountRenderPlan(this.full_id, appearance, x, y, pixel_x, pixel_y, 0.01, false));
 		if(appearance.overlays) for(let overlay of appearance.overlays) {
-			if(overlay.plane == 12) continue;
+			if(overlay.plane == 14) continue;
 			list.push(new WallmountRenderPlan(this.full_id, overlay, x, y, pixel_x, pixel_y, 0.011, false));
 		}
 		if(this.vis_contents) {
@@ -343,10 +343,10 @@ let e3d_type_handlers = new Map<string, (this: Atom, list : RenderPlan[], appear
 					thing_appearance = thing.animation.apply(thing_appearance, this.client.time);
 					this.render_plan = null;
 				}
-				if(thing_appearance.plane == 12 || thing_appearance.plane == 16) continue;
+				if(thing_appearance.plane == 14 || thing_appearance.plane == 11) continue;
 				let plan;
 				list.push(plan = new WallmountRenderPlan(this.full_id, thing_appearance, x, y, pixel_x, pixel_y, 0.011, false));
-				if(thing_appearance.plane == 13 || thing_appearance.plane == 14 || thing_appearance.plane > 15) {
+				if(thing_appearance.plane == 13 || thing_appearance.plane == 14 || thing_appearance.plane > 10) {
 					plan.icon |= (1 << 24);
 					plan.bits |= 1;
 				}
@@ -369,7 +369,7 @@ let e3d_type_handlers = new Map<string, (this: Atom, list : RenderPlan[], appear
 				list.push(new FloorRenderPlan(this.full_id, overlay, x, y, 1));
 			}
 			if(appearance.underlays) for(let underlay of appearance.underlays) {
-				if(underlay.plane == 15) continue;
+				if(underlay.plane == 10) continue;
 				e3d_type_handlers.get(E3D_TYPE_FLOOR)!.call(this, list, underlay, x, y);
 			}
 		} else {
@@ -454,7 +454,7 @@ let e3d_type_handlers = new Map<string, (this: Atom, list : RenderPlan[], appear
 					thing_appearance = thing.animation.apply(thing_appearance, this.client.time);
 					this.render_plan = null;
 				}
-				if(thing_appearance.plane == 16) continue;
+				if(thing_appearance.plane == 11) continue;
 				let plan;
 				list.push(plan = new BillboardRenderPlan(this.full_id, thing_appearance, x+0.5, y+0.5, is_wide ? [0,-1,0]:undefined, is_wide, true));
 				plan.offset_x += thing_appearance.pixel_x+thing_appearance.pixel_w;

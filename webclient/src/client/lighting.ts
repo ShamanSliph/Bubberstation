@@ -71,24 +71,25 @@ export class LightingHolder {
 		let underlay_appearance : Appearance|undefined;
 		let is_camera_static = false;
 		if(appearance?.underlays) for(let underlay of appearance.underlays) {
-			if(underlay.plane == 15) {
+			console.log(underlay);
+			if(underlay.plane == 10) {
 				underlay_appearance = underlay;
 				break;
 			}
 		}
 		if(turf.images) for(let image of turf.images) {
-			if(image.appearance?.plane == 19) is_camera_static = true;
+			if(image.appearance?.plane == 21) is_camera_static = true;
 		}
 		if(is_camera_static) {
 			if(this.data[alpha_index] != 0) {
 				this.data[alpha_index] = 0;
 				this.lightmap_dirty = true;
 			}
-		} else if(underlay_appearance?.icon_state == "adark") {
+		} else if(underlay_appearance?.icon_state == "lighting_dark") {
 			if(this.data[alpha_index] != 255) {
 				this.data[alpha_index] = 255;
-				this.lightmap_dirty = true;
-			}
+			this.lightmap_dirty = true;
+		}
 		} else if(underlay_appearance?.color_matrix) {
 			for(let c = 0; c < 4; c++) {
 				let cx = x + +!!(c & 1);
@@ -200,7 +201,7 @@ export class LightingHolder {
 
 export class LightingRenderPlan {
 	constructor(public x : number, public y : number, public range : number = 0.5, public color_alpha : number = -1) {
-		
+
 	}
 
 	write(offset : number, attribs : Float32Array, iattribs : Uint32Array) {
@@ -214,6 +215,8 @@ export class LightingRenderPlan {
 			attribs[offset++] = dy;
 			iattribs[offset++] = this.color_alpha;
 		}
+
+
 		return offset;
 	}
 }
